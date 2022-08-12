@@ -1,0 +1,4 @@
+export(pow.int)
+export(`%^%`)
+
+useDynLib(pow.int, .registration = TRUE)
