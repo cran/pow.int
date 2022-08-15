@@ -19,6 +19,7 @@
 #include <Rinternals.h>
 #include <Rmath.h>
 #include <R_ext/Itermacros.h>
+#include <R_ext/Rdynload.h>
 
 SEXP C_pow_int(SEXP x, SEXP n)
 {
@@ -29,7 +30,7 @@ SEXP C_pow_int(SEXP x, SEXP n)
 	double *xx = REAL(x);
 	int *xn = INTEGER(n);
 	double *xy = REAL(y);
-	MOD_ITERATE2(nn, nx, ny, iy, ix, in,
+	MOD_ITERATE2(ny, nx, nn, iy, ix, in,
 		xy[iy] = R_pow_di(xx[ix], xn[in]);
 	);
 	UNPROTECT(1);

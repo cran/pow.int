@@ -23,4 +23,13 @@ x \%^\% n
 }
 \examples{
 3 \%^\% 12L
+
+# Basic tests
+x <- runif(10)
+n <- as.integer(runif(length(x), 0, 100))
+stopifnot(all.equal(pow.int(x, n),  x ^ n))
+stopifnot(all.equal(pow.int(x[1], n),  x[1] ^ n))
+stopifnot(all.equal(pow.int(x, n[1]),  x ^ n[1]))
+stopifnot(all.equal(pow.int(x[1:2], n),  x[1:2] ^ n))
+stopifnot(all.equal(pow.int(x, n[1:2]),  x ^ n[1:2]))
 }
