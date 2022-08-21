@@ -21,20 +21,34 @@
 #include <R_ext/Itermacros.h>
 #include <R_ext/Rdynload.h>
 
-SEXP C_pow_int(SEXP x, SEXP n)
+SEXP C_pow_int(SEXP s1, SEXP s2)
 {
-	R_xlen_t ix, nx = XLENGTH(x);
-	R_xlen_t in, nn = XLENGTH(n);
-	R_xlen_t iy, ny = (nx >= nn ? nx : nn);
-	SEXP y = PROTECT(allocVector(REALSXP, ny));
-	double *xx = REAL(x);
-	int *xn = INTEGER(n);
-	double *xy = REAL(y);
-	MOD_ITERATE2(ny, nx, nn, iy, ix, in,
-		xy[iy] = R_pow_di(xx[ix], xn[in]);
-	);
+	R_xlen_t i, i1, i2, n, n1, n2;
+	SEXP ans;
+
+	n1 = XLENGTH(s1);
+	n2 = XLENGTH(s2);
+	n = (n1 >= n2) ? n1 : n2;
+
+	PROTECT(ans = allocVector(REALSXP, n));
+
+	double *da = REAL(ans);
+	double *d1 = REAL(s1);
+	int *d2 = INTEGER(s2);
+	if (n2 == 1) {
+		R_ITERATE(n, i, da[i] = R_pow_di(d1[i], d2[0]););
+	} else if (n1 == 1) {
+		R_ITERATE(n, i, da[i] = R_pow_di(d1[0], d2[i]););
+	} else if (n1 == n2) {
+		R_ITERATE(n, i, da[i] = R_pow_di(d1[i], d2[i]););
+	} else {
+		MOD_ITERATE2(n, n1, n2, i, i1, i2,
+				da[i] = R_pow_di(d1[i1], d2[i2]););
+	}
+
 	UNPROTECT(1);
-	return y;
+
+	return ans;
 }
 
 static const R_CallMethodDef CallEntries[] = {

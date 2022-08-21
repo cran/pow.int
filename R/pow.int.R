@@ -16,9 +16,31 @@
 
 pow.int <- function(x, n)
 {
+	nx <- length(x)
+       	nn <- length(n)
+	if (nx == 0L || nn == 0L) return (numeric(0))
+
+	if (is.array(x) && is.array(n) && any(dim(x) != dim(n))) {
+		stop("non-conformable arrays")
+	}
+	rn <- range(c(nx, nn))
+	if (rn[2L] %% rn[1L] != 0L) {
+		warning("longer object length is not a multiple of ",
+				"shorter object length");
+	}
+
 	storage.mode(x) <- "double"
 	storage.mode(n) <- "integer"
-	.Call(C_pow_int, x, n)
+	ans <- .Call(C_pow_int, x, n)
+
+	if (length(ans) == nx) {
+		mostattributes(ans) <- attributes(x)
+	} else if (length(ans) == nn) {
+		mostattributes(ans) <- attributes(n)
+	}
+
+	ans
 }
 
 `%^%` <- pow.int
+
