@@ -21,6 +21,8 @@
 #include <R_ext/Itermacros.h>
 #include <R_ext/Rdynload.h>
 
+#define NINTERRUPT	10000000U
+
 SEXP C_pow_int(SEXP s1, SEXP s2)
 {
 	R_xlen_t i, i1, i2, n, n1, n2;
@@ -36,13 +38,16 @@ SEXP C_pow_int(SEXP s1, SEXP s2)
 	double *d1 = REAL(s1);
 	int *d2 = INTEGER(s2);
 	if (n2 == 1) {
-		R_ITERATE(n, i, da[i] = R_pow_di(d1[i], d2[0]););
+		R_ITERATE_CHECK(NINTERRUPT, n, i,
+				da[i] = R_pow_di(d1[i], d2[0]););
 	} else if (n1 == 1) {
-		R_ITERATE(n, i, da[i] = R_pow_di(d1[0], d2[i]););
+		R_ITERATE_CHECK(NINTERRUPT, n, i,
+				da[i] = R_pow_di(d1[0], d2[i]););
 	} else if (n1 == n2) {
-		R_ITERATE(n, i, da[i] = R_pow_di(d1[i], d2[i]););
+		R_ITERATE_CHECK(NINTERRUPT, n, i,
+				da[i] = R_pow_di(d1[i], d2[i]););
 	} else {
-		MOD_ITERATE2(n, n1, n2, i, i1, i2,
+		MOD_ITERATE2_CHECK(NINTERRUPT, n, n1, n2, i, i1, i2,
 				da[i] = R_pow_di(d1[i1], d2[i2]););
 	}
 

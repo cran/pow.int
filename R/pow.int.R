@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)
+	abs(x - round(x)) < tol
+
 pow.int <- function(x, n)
 {
 	nx <- length(x)
@@ -26,11 +29,17 @@ pow.int <- function(x, n)
 	rn <- range(c(nx, nn))
 	if (rn[2L] %% rn[1L] != 0L) {
 		warning("longer object length is not a multiple of ",
-				"shorter object length");
+				"shorter object length")
 	}
 
 	storage.mode(x) <- "double"
-	storage.mode(n) <- "integer"
+	if (!is.integer(n)) {
+		if (!all(is.wholenumber(n) | !is.finite(n))) {
+			stop("'n' is not an integer vector")
+		}
+		storage.mode(n) <- "integer"
+	}
+
 	ans <- .Call(C_pow_int, x, n)
 
 	if (length(ans) == nx) {

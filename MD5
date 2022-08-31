@@ -1,6 +1,6 @@
 a36207309d382da27cd66fdaae922e3c *COPYING
-b03bb07adc7c5e20165098cb0d487f4d *DESCRIPTION
+24afc11da54888f5d293d8ddbca6391e *DESCRIPTION
 aef376b908570b43306adf8d74abf58f *NAMESPACE
-3aea34837251c0af2202d31ace9b4672 *R/pow.int.R
+62b6dc7595a56f5963c1c2ebf0738ce8 *R/pow.int.R
 b04c8673accba7ada124ba19c88d4bef *man/pow.int.Rd
-f28363dd50a8ac318aa2c210a29c0828 *src/pow_int.c
+bfcb2c801de185b4dd98ce6c4c8cc925 *src/pow_int.c
